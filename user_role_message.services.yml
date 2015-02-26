@@ -1,0 +1,6 @@
+services:
+  user_role_message_event_subscriber:
+    class: Drupal\user_role_message\EventSubscriber\UserRoleMessageEventSubscriber
+    arguments: ['@current_user', '@entity.manager', '@config.factory', '@plugin.manager.condition']
+    tags:
+      - {name: event_subscriber}

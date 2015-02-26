@@ -2,13 +2,14 @@
 
 /**
  * @file
- * Contains Drupal\path_message\Form\PathMessageAdminForm
+ * Contains Drupal\user_role_message\Form\UserRoleMessageAdminForm
  */
 
-namespace Drupal\path_message\Form;
+namespace Drupal\user_role_message\Form;
 
 use Drupal\Component\Plugin\Factory\FactoryInterface;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides and admin form for Path Message.
  */
-class PathMessageAdminForm extends ConfigFormBase {
+class UserRoleMessageAdminForm extends ConfigFormBase {
 
   /**
    * The condition manager.
@@ -28,12 +29,12 @@ class PathMessageAdminForm extends ConfigFormBase {
   /**
    * The request path condition.
    *
-   * @var \Drupal\system\Plugin\Condition\RequestPath $condition
+   * @var \Drupal\user\Plugin\Condition\UserRole $condition
    */
   protected $condition;
 
   /**
-   * Creates a new PathMessageAdminForm.
+   * Creates a new UserRoleMessageAdminForm.
    *
    * @param ConfigFactoryInterface $config_factory
    *   The config factory.
@@ -42,7 +43,7 @@ class PathMessageAdminForm extends ConfigFormBase {
    */
   public function __construct(ConfigFactoryInterface $config_factory, FactoryInterface $plugin_factory) {
     parent::__construct($config_factory);
-    $this->condition = $plugin_factory->createInstance('request_path');
+    $this->condition = $plugin_factory->createInstance('user_role');
   }
 
   /**
@@ -59,18 +60,27 @@ class PathMessageAdminForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'path_message_admin';
+    return 'user_role_message_admin';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  protected function getEditableConfigNames() {
+    return [
+      'user_role_message.settings',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
     // Load our default configuration.
-    $config = $this->config('path_message.settings');
+    $config = $this->config('user_role_message.settings');
 
     // Set the default condition configuration.
-    $this->condition->setConfiguration($config->get('request_path'));
+    $this->condition->setConfiguration($config->get('user_roles'));
 
     $form['message'] = array(
       '#type' => 'textfield',
@@ -88,12 +98,12 @@ class PathMessageAdminForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
 
     $this->condition->submitConfigurationForm($form, $form_state);
-    $this->config('path_message.settings')
-      ->set('message', String::checkPlain($form_state['values']['message']))
-      ->set('request_path', $this->condition->getConfiguration())
+    $this->config('user_role_message.settings')
+      ->set('message', String::checkPlain($form_state->getValue('message')))
+      ->set('user_roles', $this->condition->getConfiguration())
       ->save();
 
     parent::submitForm($form, $form_state);

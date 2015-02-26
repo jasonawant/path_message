@@ -1,0 +1,5 @@
+user_role_message.settings:
+  title: 'User Role Message'
+  description: 'Set a message to appear for user roles'
+  route_name: user_role_message.settings
+  parent: system.admin_config_system

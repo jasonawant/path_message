@@ -1,0 +1,7 @@
+user_role_message.settings:
+  path: '/admin/config/system/user_role_message'
+  defaults:
+    _form: '\Drupal\user_role_message\Form\UserRoleMessageAdminForm'
+    _title: 'User Role Message'
+  requirements:
+    _permission: 'administer site configuration'
