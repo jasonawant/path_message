@@ -78,8 +78,7 @@ class UserRoleMessageEventSubscriber implements EventSubscriberInterface {
       ->setConfig('negate',  $user_role_config['negate'])
       ->setContextValue('user', $current_user);
 
-    $result = $condition->evaluate();
-    if ($result) {
+    if ($condition->evaluate()) {
       drupal_set_message($this->config->get('message'));
     }
   }
