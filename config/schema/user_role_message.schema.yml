@@ -6,5 +6,5 @@ user_role_message.settings:
       type: string
       label: 'Message'
     user_roles:
-      type: condition.plugin.request_path
+      type: condition.plugin.user_role
       label: 'User Role Condition'
