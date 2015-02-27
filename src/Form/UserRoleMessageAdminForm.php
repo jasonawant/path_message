@@ -78,9 +78,10 @@ class UserRoleMessageAdminForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Load our default configuration.
     $config = $this->config('user_role_message.settings');
-
+    $user_role_config = $config->get('user_roles');
+    $user_role_config = (isset($user_role_config)) ? $user_role_config : array();
     // Set the default condition configuration.
-    $this->condition->setConfiguration($config->get('user_roles'));
+    $this->condition->setConfiguration($user_role_config);
 
     $form['message'] = array(
       '#type' => 'textfield',
